@@ -1,8 +1,54 @@
+# Maven build
 target/
+build/
+dist/
+lib/
+*.jar
+
+# ANTLR generated
+*.tokens
+*.interp
+*.bak
+.antlr
+.fetch_time_cache
+/gen/
+/out/
+
+# Java
 *.class
+
+# IDEs
 .idea/
 *.iml
-.settings/
-.project
+*.iws
 .classpath
+.project
+.settings/
 .vscode/
+.suo
+*.user
+*.userosscache
+*.sln.docstates
+nbactions*.xml
+/nbproject/private/
+*/nbproject/private/
+
+# OS
+.DS_Store
+**/.DS_Store
+*~
+\#*\#
+
+# Node / Python (tooling)
+node_modules/
+__pycache__/
+*.py[cod]
+*$py.class
+*.egg-info/
+
+# Gradle
+.gradle/
+
+# Profiler / logs
+*.hprof
+bild.log
