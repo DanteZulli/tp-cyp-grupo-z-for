@@ -2,14 +2,16 @@
 
 **Licenciatura en Sistemas — Conceptos y Paradigmas de Lenguajes de Programación — 2026**
 
+**Equipo docente:** Ing. Elida Leoni — Lic. Tomas Silvestre
+
 ## Integrantes
 
-- Apellido, Nombre — Legajo
-- Apellido, Nombre — Legajo
+- Mendieta, Gabriel — 41805105
+- Zulli, Dante — 45630783
 
 ## Variante asignada
 
-<!-- Completar -->
+**Variante 2: for** — Iteración con variable de control.
 
 ## Descripción del lenguaje
 
