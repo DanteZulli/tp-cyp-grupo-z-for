@@ -1,11 +1,8 @@
 package com.grupoz.interprete;
 
-import java.util.HashMap;
-import java.util.Map;
+public class Interpreter extends LanguageBaseVisitor<Object> {
 
-public class LanguageCustomVisitor extends LanguageBaseVisitor<Object> {
-
-    private final Map<String, Object> variables = new HashMap<>();
+    private final SymbolTable symTable = new SymbolTable();
 
     @Override
     public Object visitProgram(LanguageParser.ProgramContext ctx) {
@@ -22,14 +19,26 @@ public class LanguageCustomVisitor extends LanguageBaseVisitor<Object> {
     @Override
     public Object visitVarDecl(LanguageParser.VarDeclContext ctx) {
         String name = ctx.ID().getText();
-        Object value = ctx.expr() != null ? visit(ctx.expr()) : null;
-        variables.put(name, value);
+        SymbolTable.Type type = SymbolTable.Type.fromString(ctx.type().getText());
+        Object value = null;
+        boolean initialized = false;
+        if (ctx.expr() != null) {
+            value = visit(ctx.expr());
+            initialized = true;
+        }
+        symTable.declare(name, type, value, initialized);
         return null;
     }
 
     @Override
     public Object visitAssignment(LanguageParser.AssignmentContext ctx) {
-        variables.put(ctx.ID().getText(), visit(ctx.expr()));
+        String name = ctx.ID().getText();
+        Object value = visit(ctx.expr());
+        SymbolTable.Type targetType = symTable.getType(name);
+        if (value instanceof Integer && targetType == SymbolTable.Type.FLOAT) {
+            value = ((Integer) value).doubleValue();
+        }
+        symTable.assign(name, value);
         return null;
     }
 
@@ -148,7 +157,7 @@ public class LanguageCustomVisitor extends LanguageBaseVisitor<Object> {
 
     @Override
     public Object visitIdRef(LanguageParser.IdRefContext ctx) {
-        return variables.get(ctx.ID().getText());
+        return symTable.getValue(ctx.ID().getText());
     }
 
     @Override

@@ -21,8 +21,20 @@ public class Main {
             CommonTokenStream tokens = new CommonTokenStream(lexer);
             LanguageParser parser = new LanguageParser(tokens);
             LanguageParser.ProgramContext tree = parser.program();
-            LanguageCustomVisitor visitor = new LanguageCustomVisitor();
-            visitor.visit(tree);
+
+            SemanticAnalyzer analyzer = new SemanticAnalyzer();
+            analyzer.visit(tree);
+            if (analyzer.hasErrors()) {
+                System.out.println("Errores semanticos:");
+                for (String err : analyzer.getErrors()) {
+                    System.out.println("  " + err);
+                }
+                System.out.println("FINISH (con errores): " + file);
+                continue;
+            }
+
+            Interpreter interpreter = new Interpreter();
+            interpreter.visit(tree);
 
             System.out.println("FINISH: " + file);
         }
