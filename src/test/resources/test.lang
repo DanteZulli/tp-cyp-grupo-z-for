@@ -1,1 +1,7 @@
-hello world
+var nota : int = 8;
+
+if (nota >= 6) {
+    print("Aprobado");
+} else {
+    print("Desaprobado");
+}

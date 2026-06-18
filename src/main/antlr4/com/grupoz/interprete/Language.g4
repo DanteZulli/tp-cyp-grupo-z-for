@@ -10,6 +10,7 @@ statement
     : varDecl ';'
     | assignment ';'
     | printStmt ';'
+    | ifStmt
     ;
 
 varDecl
@@ -22,6 +23,14 @@ assignment
 
 printStmt
     : 'print' '(' expr ')'
+    ;
+
+block
+    : '{' statement* '}'
+    ;
+
+ifStmt
+    : 'if' '(' expr ')' block ('else' block)?
     ;
 
 type
