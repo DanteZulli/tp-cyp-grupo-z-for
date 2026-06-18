@@ -20,7 +20,7 @@ public class Main {
             LanguageLexer lexer = new LanguageLexer(in);
             CommonTokenStream tokens = new CommonTokenStream(lexer);
             LanguageParser parser = new LanguageParser(tokens);
-            LanguageParser.StartContext tree = parser.start();
+            LanguageParser.ProgramContext tree = parser.program();
             LanguageCustomVisitor visitor = new LanguageCustomVisitor();
             visitor.visit(tree);
 
