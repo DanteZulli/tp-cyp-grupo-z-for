@@ -1,0 +1,30 @@
+// Variable no declarada
+x = 5;
+
+// Redeclaracion
+var a : int = 1;
+var a : int = 2;
+
+// Error de tipo en declaracion
+var b : int = "texto";
+
+// Error de tipo en asignacion
+var c : int = 0;
+c = true;
+
+// Operacion invalida: suma de string e int
+var d : string = "a" + 1;
+
+// Division por cero literal
+var e : int = 10 / 0;
+
+// Operador relacional invalido con string
+var f : bool = "hola" < "mundo";
+
+// ! sobre entero
+var g : bool = !42;
+
+// if con condicion no bool
+if (42) {
+    print("si");
+}

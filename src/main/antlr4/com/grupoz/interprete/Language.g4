@@ -2,72 +2,52 @@ grammar Language;
 
 // ─── Parser Rules ────────────────────────────────────────────────────────────
 
-program
-    : statement* EOF
-    ;
+program: statement* EOF;
 
-statement
-    : varDecl ';'
-    | assignment ';'
-    | printStmt ';'
-    | ifStmt
-    ;
+statement:
+	varDecl ';'
+	| assignment ';'
+	| printStmt ';'
+	| ifStmt;
 
-varDecl
-    : 'var' ID ':' type ('=' expr)?
-    ;
+varDecl: 'var' ID ':' type ('=' expr)?;
 
-assignment
-    : ID '=' expr
-    ;
+assignment: ID '=' expr;
 
-printStmt
-    : 'print' '(' expr ')'
-    ;
+printStmt: 'print' '(' expr ')';
 
-block
-    : '{' statement* '}'
-    ;
+block: '{' statement* '}';
 
-ifStmt
-    : 'if' '(' expr ')' block ('else' block)?
-    ;
+ifStmt: 'if' '(' expr ')' block ('else' block)?;
 
-type
-    : 'int'
-    | 'float'
-    | 'string'
-    | 'bool'
-    ;
+type: 'int' | 'float' | 'string' | 'bool';
 
-expr
-    : primary                                             # primaryExpr
-    | '!' expr                                            # notExpr
-    | '-' expr                                            # unaryMinusExpr
-    | expr op=('*'|'/') expr                              # mulDivExpr
-    | expr op=('+'|'-') expr                              # addSubExpr
-    | expr op=('=='|'!='|'<'|'>'|'<='|'>=') expr          # relationalExpr
-    | expr '&&' expr                                      # andExpr
-    | expr '||' expr                                      # orExpr
-    ;
+expr:
+	primary														# primaryExpr
+	| '!' expr													# notExpr
+	| '-' expr													# unaryMinusExpr
+	| expr op = ('*' | '/') expr								# mulDivExpr
+	| expr op = ('+' | '-') expr								# addSubExpr
+	| expr op = ('==' | '!=' | '<' | '>' | '<=' | '>=') expr	# relationalExpr
+	| expr '&&' expr											# andExpr
+	| expr '||' expr											# orExpr;
 
-primary
-    : INT                                                 # intLiteral
-    | FLOAT                                               # floatLiteral
-    | STRING                                              # stringLiteral
-    | 'true'                                              # trueLiteral
-    | 'false'                                             # falseLiteral
-    | ID                                                  # idRef
-    | '(' expr ')'                                        # parenExpr
-    ;
+primary:
+	INT				# intLiteral
+	| FLOAT			# floatLiteral
+	| STRING		# stringLiteral
+	| 'true'		# trueLiteral
+	| 'false'		# falseLiteral
+	| ID			# idRef
+	| '(' expr ')'	# parenExpr;
 
 // ─── Lexer Rules ─────────────────────────────────────────────────────────────
 
-FLOAT  : [0-9]+ '.' [0-9]+ ;
-INT    : [0-9]+ ;
-STRING : '"' (~["\r\n])* '"' ;
-ID     : [a-zA-Z_][a-zA-Z0-9_]* ;
+FLOAT: [0-9]+ '.' [0-9]+;
+INT: [0-9]+;
+STRING: '"' (~["\r\n])* '"';
+ID: [a-zA-Z_][a-zA-Z0-9_]*;
 
-LINE_COMMENT  : '//' ~[\r\n]* -> skip ;
-BLOCK_COMMENT : '/*' .*? '*/' -> skip ;
-WS            : [ \t\r\n]+ -> skip ;
+LINE_COMMENT: '//' ~[\r\n]* -> skip;
+BLOCK_COMMENT: '/*' .*? '*/' -> skip;
+WS: [ \t\r\n]+ -> skip;

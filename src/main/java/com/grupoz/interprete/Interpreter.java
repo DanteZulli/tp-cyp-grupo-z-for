@@ -1,18 +1,26 @@
 package com.grupoz.interprete;
 
+/**
+ * Interprete del lenguaje. Recorre el AST (Abstract Syntax Tree)
+ * que genera ANTLR y ejecuta cada instruccion:
+ * declaraciones, asignaciones, expresiones, print y if-else.
+ * Utiliza SymbolTable para almacenar y recuperar valores.
+ */
 public class Interpreter extends LanguageBaseVisitor<Object> {
 
     private final SymbolTable symTable = new SymbolTable();
 
     @Override
     public Object visitProgram(LanguageParser.ProgramContext ctx) {
-        for (var stmt : ctx.statement()) visit(stmt);
+        for (var stmt : ctx.statement())
+            visit(stmt);
         return null;
     }
 
     @Override
     public Object visitBlock(LanguageParser.BlockContext ctx) {
-        for (var stmt : ctx.statement()) visit(stmt);
+        for (var stmt : ctx.statement())
+            visit(stmt);
         return null;
     }
 
@@ -83,8 +91,8 @@ public class Interpreter extends LanguageBaseVisitor<Object> {
         Object right = visit(ctx.expr(1));
         boolean isFloat = left instanceof Double || right instanceof Double;
         return ctx.op.getText().equals("*")
-            ? (isFloat ? toDouble(left) * toDouble(right) : (int) left * (int) right)
-            : (isFloat ? toDouble(left) / toDouble(right) : (int) left / (int) right);
+                ? (isFloat ? toDouble(left) * toDouble(right) : (int) left * (int) right)
+                : (isFloat ? toDouble(left) / toDouble(right) : (int) left / (int) right);
     }
 
     @Override
@@ -93,8 +101,8 @@ public class Interpreter extends LanguageBaseVisitor<Object> {
         Object right = visit(ctx.expr(1));
         boolean isFloat = left instanceof Double || right instanceof Double;
         return ctx.op.getText().equals("+")
-            ? (isFloat ? toDouble(left) + toDouble(right) : (int) left + (int) right)
-            : (isFloat ? toDouble(left) - toDouble(right) : (int) left - (int) right);
+                ? (isFloat ? toDouble(left) + toDouble(right) : (int) left + (int) right)
+                : (isFloat ? toDouble(left) - toDouble(right) : (int) left - (int) right);
     }
 
     @Override
@@ -107,13 +115,13 @@ public class Interpreter extends LanguageBaseVisitor<Object> {
         }
         double l = toDouble(left), r = toDouble(right);
         return switch (op) {
-            case "<"  -> l < r;
-            case ">"  -> l > r;
+            case "<" -> l < r;
+            case ">" -> l > r;
             case "<=" -> l <= r;
             case ">=" -> l >= r;
             case "==" -> l == r;
             case "!=" -> l != r;
-            default   -> false;
+            default -> false;
         };
     }
 

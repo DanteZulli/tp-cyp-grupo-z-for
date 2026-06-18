@@ -6,6 +6,11 @@ import java.util.Map;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 
+/**
+ * Tabla de simbolos del interprete.
+ * Almacena variables con su tipo, valor y estado de inicializacion.
+ * Es utilizada tanto por el analizador semantico como por el interprete.
+ */
 public class SymbolTable {
 
     public enum Type {

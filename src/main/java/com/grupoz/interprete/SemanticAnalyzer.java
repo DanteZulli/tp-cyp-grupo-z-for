@@ -5,6 +5,12 @@ import java.util.List;
 
 import lombok.Getter;
 
+/**
+ * Analizador semantico. Recorre el AST (Abstract Syntax Tree) validando tipos,
+ * redeclaraciones, variables no declaradas, operaciones invalidas y division
+ * por cero.
+ * No ejecuta el programa, solo acumula errores.
+ */
 public class SemanticAnalyzer extends LanguageBaseVisitor<Object> {
 
     private final SymbolTable symTable = new SymbolTable();
@@ -17,13 +23,15 @@ public class SemanticAnalyzer extends LanguageBaseVisitor<Object> {
 
     @Override
     public Object visitProgram(LanguageParser.ProgramContext ctx) {
-        for (var stmt : ctx.statement()) visit(stmt);
+        for (var stmt : ctx.statement())
+            visit(stmt);
         return null;
     }
 
     @Override
     public Object visitBlock(LanguageParser.BlockContext ctx) {
-        for (var stmt : ctx.statement()) visit(stmt);
+        for (var stmt : ctx.statement())
+            visit(stmt);
         return null;
     }
 
@@ -43,7 +51,7 @@ public class SemanticAnalyzer extends LanguageBaseVisitor<Object> {
             SymbolTable.Type exprType = (SymbolTable.Type) visit(ctx.expr());
             if (exprType != declType) {
                 errors.add("Error de tipo (linea " + ctx.getStart().getLine()
-                    + "): no se puede asignar " + exprType + " a variable " + declType);
+                        + "): no se puede asignar " + exprType + " a variable " + declType);
             } else {
                 symTable.assign(name, null);
             }
@@ -65,7 +73,7 @@ public class SemanticAnalyzer extends LanguageBaseVisitor<Object> {
 
         if (exprType != varType) {
             errors.add("Error de tipo (linea " + ctx.getStart().getLine()
-                + "): no se puede asignar " + exprType + " a variable " + varType);
+                    + "): no se puede asignar " + exprType + " a variable " + varType);
         }
         return null;
     }
@@ -81,10 +89,11 @@ public class SemanticAnalyzer extends LanguageBaseVisitor<Object> {
         SymbolTable.Type condType = (SymbolTable.Type) visit(ctx.expr());
         if (condType != SymbolTable.Type.BOOL) {
             errors.add("Error de tipo (linea " + ctx.getStart().getLine()
-                + "): condicion if debe ser bool, no " + condType);
+                    + "): condicion if debe ser bool, no " + condType);
         }
         visit(ctx.block(0));
-        if (ctx.block().size() > 1) visit(ctx.block(1));
+        if (ctx.block().size() > 1)
+            visit(ctx.block(1));
         return null;
     }
 
@@ -100,7 +109,7 @@ public class SemanticAnalyzer extends LanguageBaseVisitor<Object> {
         SymbolTable.Type t = (SymbolTable.Type) visit(ctx.expr());
         if (t != SymbolTable.Type.BOOL) {
             errors.add("Error de tipo (linea " + ctx.getStart().getLine()
-                + "): ! requiere bool, no " + t);
+                    + "): ! requiere bool, no " + t);
         }
         return SymbolTable.Type.BOOL;
     }
@@ -110,7 +119,7 @@ public class SemanticAnalyzer extends LanguageBaseVisitor<Object> {
         SymbolTable.Type t = (SymbolTable.Type) visit(ctx.expr());
         if (!t.isNumeric()) {
             errors.add("Error de tipo (linea " + ctx.getStart().getLine()
-                + "): - requiere valor numerico, no " + t);
+                    + "): - requiere valor numerico, no " + t);
         }
         return t;
     }
@@ -122,7 +131,7 @@ public class SemanticAnalyzer extends LanguageBaseVisitor<Object> {
 
         if (!left.isNumeric() || !right.isNumeric()) {
             errors.add("Error de tipo (linea " + ctx.getStart().getLine()
-                + "): */ requiere operandos numericos");
+                    + "): */ requiere operandos numericos");
             return SymbolTable.Type.INT;
         }
 
@@ -143,7 +152,8 @@ public class SemanticAnalyzer extends LanguageBaseVisitor<Object> {
         }
 
         return left == SymbolTable.Type.FLOAT || right == SymbolTable.Type.FLOAT
-            ? SymbolTable.Type.FLOAT : SymbolTable.Type.INT;
+                ? SymbolTable.Type.FLOAT
+                : SymbolTable.Type.INT;
     }
 
     @Override
@@ -153,12 +163,13 @@ public class SemanticAnalyzer extends LanguageBaseVisitor<Object> {
 
         if (!left.isNumeric() || !right.isNumeric()) {
             errors.add("Error de tipo (linea " + ctx.getStart().getLine()
-                + "): +- requiere operandos numericos");
+                    + "): +- requiere operandos numericos");
             return SymbolTable.Type.INT;
         }
 
         return left == SymbolTable.Type.FLOAT || right == SymbolTable.Type.FLOAT
-            ? SymbolTable.Type.FLOAT : SymbolTable.Type.INT;
+                ? SymbolTable.Type.FLOAT
+                : SymbolTable.Type.INT;
     }
 
     @Override
@@ -170,11 +181,11 @@ public class SemanticAnalyzer extends LanguageBaseVisitor<Object> {
             String op = ctx.op.getText();
             if (!op.equals("==") && !op.equals("!=")) {
                 errors.add("Error de tipo (linea " + ctx.getStart().getLine()
-                    + "): no se puede usar " + op + " con strings");
+                        + "): no se puede usar " + op + " con strings");
             }
         } else if (!left.isNumeric() || !right.isNumeric()) {
             errors.add("Error de tipo (linea " + ctx.getStart().getLine()
-                + "): operadores relacionales requieren tipos comparables");
+                    + "): operadores relacionales requieren tipos comparables");
         }
 
         return SymbolTable.Type.BOOL;

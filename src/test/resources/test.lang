@@ -1,7 +1,67 @@
-var nota : int = 8;
+// ── Tipos de datos y variables ──
+var entero : int = 42;
+var real : float = 3.14;
+var texto : string = "hola";
+var flag : bool = true;
+var sinInit : int;
 
-if (nota >= 6) {
-    print("Aprobado");
+// ── Asignacion ──
+sinInit = 10;
+
+// ── Expresiones aritmeticas ──
+var suma : int = entero + 5;
+var resta : int = entero - 2;
+var mult : int = entero * 2;
+var div : float = real / 2.0;
+var negativo : int = -entero;
+
+// ── Expresiones relacionales ──
+var igual : bool = entero == 42;
+var distinto : bool = entero != 0;
+var menor : bool = entero < 50;
+var mayor : bool = entero > 10;
+var menorIgual : bool = entero <= 42;
+var mayorIgual : bool = entero >= 42;
+
+// ── Expresiones logicas ──
+var yLogico : bool = flag && true;
+var oLogico : bool = flag || false;
+var noLogico : bool = !flag;
+
+// ── Print ──
+print("Entero:");
+print(entero);
+print("Real:");
+print(real);
+print("Texto:");
+print(texto);
+print("Bool:");
+print(flag);
+
+// ── If-else ──
+print("--- if-else ---");
+if (entero >= 18) {
+    print("Mayor de edad");
 } else {
-    print("Desaprobado");
+    print("Menor de edad");
 }
+
+// ── If-else anidado ──
+print("--- if-else anidado ---");
+if (entero > 0) {
+    if (entero > 100) {
+        print("Grande");
+    } else {
+        print("Chico positivo");
+    }
+} else {
+    print("Negativo o cero");
+}
+
+// ── If sin else ──
+print("--- if sin else ---");
+if (entero == 42) {
+    print("Es la respuesta");
+}
+
+print("--- FIN ---");
