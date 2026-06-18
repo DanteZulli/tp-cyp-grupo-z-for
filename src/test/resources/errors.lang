@@ -28,3 +28,18 @@ var g : bool = !42;
 if (42) {
     print("si");
 }
+
+// For con condicion no bool
+for (var i : int = 0; i + 1; i = i + 1) {
+    print(i);
+}
+
+// For con error de tipo en la declaracion
+for (var j : int = "texto"; j < 5; j = j + 1) {
+    print(j);
+}
+
+// For con error de tipo en el update
+for (var k : int = 0; k < 5; k = true) {
+    print(k);
+}

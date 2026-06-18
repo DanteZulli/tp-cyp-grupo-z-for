@@ -8,7 +8,8 @@ statement:
 	varDecl ';'
 	| assignment ';'
 	| printStmt ';'
-	| ifStmt;
+	| ifStmt
+	| forStmt;
 
 varDecl: 'var' ID ':' type ('=' expr)?;
 
@@ -19,6 +20,8 @@ printStmt: 'print' '(' expr ')';
 block: '{' statement* '}';
 
 ifStmt: 'if' '(' expr ')' block ('else' block)?;
+
+forStmt: 'for' '(' varDecl ';' expr ';' assignment ')' block;
 
 type: 'int' | 'float' | 'string' | 'bool';
 

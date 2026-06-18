@@ -67,6 +67,16 @@ public class Interpreter extends LanguageBaseVisitor<Object> {
         return null;
     }
 
+    @Override
+    public Object visitForStmt(LanguageParser.ForStmtContext ctx) {
+        visit(ctx.varDecl());
+        while ((boolean) visit(ctx.expr())) {
+            visit(ctx.block());
+            visit(ctx.assignment());
+        }
+        return null;
+    }
+
     // ── Expresiones ───────────────────────────────────────────────────────────
 
     @Override

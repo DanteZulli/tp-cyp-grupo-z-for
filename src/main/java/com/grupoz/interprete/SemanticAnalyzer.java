@@ -97,6 +97,19 @@ public class SemanticAnalyzer extends LanguageBaseVisitor<Object> {
         return null;
     }
 
+    @Override
+    public Object visitForStmt(LanguageParser.ForStmtContext ctx) {
+        visit(ctx.varDecl());
+        SymbolTable.Type condType = (SymbolTable.Type) visit(ctx.expr());
+        if (condType != SymbolTable.Type.BOOL) {
+            errors.add("Error de tipo (linea " + ctx.getStart().getLine()
+                    + "): condicion for debe ser bool, no " + condType);
+        }
+        visit(ctx.assignment());
+        visit(ctx.block());
+        return null;
+    }
+
     // ── Expresiones ───────────────────────────────────────────────────────────
 
     @Override

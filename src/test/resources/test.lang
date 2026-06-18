@@ -65,3 +65,40 @@ if (entero == 42) {
 }
 
 print("--- FIN ---");
+
+// ── For basico ──
+print("--- for basico ---");
+for (var i : int = 0; i < 5; i = i + 1) {
+    print(i);
+}
+
+// ── For con cuerpo que usa la variable ──
+print("--- for con expresion ---");
+for (var j : int = 1; j < 4; j = j + 1) {
+    print(j * 2);
+}
+
+// ── For que no ejecuta (condicion falsa desde el inicio) ──
+print("--- for sin iteraciones ---");
+for (var k : int = 10; k < 5; k = k + 1) {
+    print(k);
+}
+print("despues del for vacio");
+
+// ── For con if adentro ──
+print("--- for con if adentro ---");
+for (var n : int = 0; n < 6; n = n + 1) {
+    if (n == 3) {
+        print("encontre el 3");
+    }
+}
+
+// ── For anidado ──
+print("--- for anidado ---");
+for (var x : int = 0; x < 3; x = x + 1) {
+    for (var y : int = 0; y < 3; y = y + 1) {
+        print(x + y);
+    }
+}
+
+print("--- FIN FOR ---");
