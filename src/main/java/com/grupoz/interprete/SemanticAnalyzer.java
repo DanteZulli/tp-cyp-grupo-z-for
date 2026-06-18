@@ -3,17 +3,16 @@ package com.grupoz.interprete;
 import java.util.ArrayList;
 import java.util.List;
 
+import lombok.Getter;
+
 public class SemanticAnalyzer extends LanguageBaseVisitor<Object> {
 
     private final SymbolTable symTable = new SymbolTable();
+    @Getter
     private final List<String> errors = new ArrayList<>();
 
     public boolean hasErrors() {
         return !errors.isEmpty();
-    }
-
-    public List<String> getErrors() {
-        return errors;
     }
 
     @Override

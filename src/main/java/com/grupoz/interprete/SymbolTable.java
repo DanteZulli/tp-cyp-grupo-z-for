@@ -3,6 +3,9 @@ package com.grupoz.interprete;
 import java.util.HashMap;
 import java.util.Map;
 
+import lombok.AllArgsConstructor;
+import lombok.Data;
+
 public class SymbolTable {
 
     public enum Type {
@@ -23,16 +26,12 @@ public class SymbolTable {
         }
     }
 
+    @Data
+    @AllArgsConstructor
     public static class Entry {
-        public final Type type;
-        public Object value;
-        public boolean initialized;
-
-        public Entry(Type type, Object value, boolean initialized) {
-            this.type = type;
-            this.value = value;
-            this.initialized = initialized;
-        }
+        private final Type type;
+        private Object value;
+        private boolean initialized;
     }
 
     private final Map<String, Entry> symbols = new HashMap<>();
@@ -47,19 +46,19 @@ public class SymbolTable {
 
     public Type getType(String name) {
         Entry e = symbols.get(name);
-        return e != null ? e.type : null;
+        return e != null ? e.getType() : null;
     }
 
     public Object getValue(String name) {
         Entry e = symbols.get(name);
-        return e != null ? e.value : null;
+        return e != null ? e.getValue() : null;
     }
 
     public void assign(String name, Object value) {
         Entry e = symbols.get(name);
         if (e != null) {
-            e.value = value;
-            e.initialized = true;
+            e.setValue(value);
+            e.setInitialized(true);
         }
     }
 
