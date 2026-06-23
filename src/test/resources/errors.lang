@@ -2,44 +2,44 @@
 x = 5;
 
 // Redeclaracion
-var a : int = 1;
-var a : int = 2;
+variable a : entero = 1;
+variable a : entero = 2;
 
 // Error de tipo en declaracion
-var b : int = "texto";
+variable b : entero = "texto";
 
 // Error de tipo en asignacion
-var c : int = 0;
-c = true;
+variable c : entero = 0;
+c = verdad;
 
-// Operacion invalida: suma de string e int
-var d : string = "a" + 1;
+// Operacion invalida: suma de texto y entero
+variable d : texto = "a" + 1;
 
 // Division por cero literal
-var e : int = 10 / 0;
+variable e : entero = 10 / 0;
 
-// Operador relacional invalido con string
-var f : bool = "hola" < "mundo";
+// Operador relacional invalido con texto
+variable f : boleano = "hola" < "mundo";
 
-// ! sobre entero
-var g : bool = !42;
+// no sobre entero
+variable g : boleano = no 42;
 
-// if con condicion no bool
-if (42) {
-    print("si");
+// si con condicion no bool
+si (42) {
+    mostrar("si");
 }
 
-// For con condicion no bool
-for (var i : int = 0; i + 1; i = i + 1) {
-    print(i);
+// Para con condicion no bool
+para (variable i : entero = 0; i + 1; i = i + 1) {
+    mostrar(i);
 }
 
-// For con error de tipo en la declaracion
-for (var j : int = "texto"; j < 5; j = j + 1) {
-    print(j);
+// Para con error de tipo en la declaracion
+para (variable j : entero = "texto"; j < 5; j = j + 1) {
+    mostrar(j);
 }
 
-// For con error de tipo en el update
-for (var k : int = 0; k < 5; k = true) {
-    print(k);
+// Para con error de tipo en el update
+para (variable k : entero = 0; k < 5; k = verdad) {
+    mostrar(k);
 }

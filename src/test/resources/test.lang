@@ -1,104 +1,104 @@
 // ── Tipos de datos y variables ──
-var entero : int = 42;
-var real : float = 3.14;
-var texto : string = "hola";
-var flag : bool = true;
-var sinInit : int;
+variable num : entero = 42;
+variable precio : real = 3.14;
+variable nombre : texto = "hola";
+variable ok : boleano = verdad;
+variable sinInit : entero;
 
 // ── Asignacion ──
 sinInit = 10;
 
 // ── Expresiones aritmeticas ──
-var suma : int = entero + 5;
-var resta : int = entero - 2;
-var mult : int = entero * 2;
-var div : float = real / 2.0;
-var negativo : int = -entero;
+variable suma : entero = num + 5;
+variable resta : entero = num - 2;
+variable mult : entero = num * 2;
+variable div : real = precio / 2.0;
+variable negativo : entero = -num;
 
 // ── Expresiones relacionales ──
-var igual : bool = entero == 42;
-var distinto : bool = entero != 0;
-var menor : bool = entero < 50;
-var mayor : bool = entero > 10;
-var menorIgual : bool = entero <= 42;
-var mayorIgual : bool = entero >= 42;
+variable igual : boleano = num == 42;
+variable distinto : boleano = num != 0;
+variable menor : boleano = num < 50;
+variable mayor : boleano = num > 10;
+variable menorIgual : boleano = num <= 42;
+variable mayorIgual : boleano = num >= 42;
 
 // ── Expresiones logicas ──
-var yLogico : bool = flag && true;
-var oLogico : bool = flag || false;
-var noLogico : bool = !flag;
+variable yLogico : boleano = ok y verdad;
+variable oLogico : boleano = ok o falso;
+variable noLogico : boleano = no ok;
 
-// ── Print ──
-print("Entero:");
-print(entero);
-print("Real:");
-print(real);
-print("Texto:");
-print(texto);
-print("Bool:");
-print(flag);
+// ── Mostrar ──
+mostrar("Entero:");
+mostrar(num);
+mostrar("Real:");
+mostrar(precio);
+mostrar("Texto:");
+mostrar(nombre);
+mostrar("Bool:");
+mostrar(ok);
 
-// ── If-else ──
-print("--- if-else ---");
-if (entero >= 18) {
-    print("Mayor de edad");
-} else {
-    print("Menor de edad");
+// ── Si-sino ──
+mostrar("--- si-sino ---");
+si (num >= 18) {
+    mostrar("Mayor de edad");
+} sino {
+    mostrar("Menor de edad");
 }
 
-// ── If-else anidado ──
-print("--- if-else anidado ---");
-if (entero > 0) {
-    if (entero > 100) {
-        print("Grande");
-    } else {
-        print("Chico positivo");
+// ── Si-sino anidado ──
+mostrar("--- si-sino anidado ---");
+si (num > 0) {
+    si (num > 100) {
+        mostrar("Grande");
+    } sino {
+        mostrar("Chico positivo");
     }
-} else {
-    print("Negativo o cero");
+} sino {
+    mostrar("Negativo o cero");
 }
 
-// ── If sin else ──
-print("--- if sin else ---");
-if (entero == 42) {
-    print("Es la respuesta");
+// ── Si sin sino ──
+mostrar("--- si sin sino ---");
+si (num == 42) {
+    mostrar("Es la respuesta");
 }
 
-print("--- FIN ---");
+mostrar("--- FIN ---");
 
-// ── For basico ──
-print("--- for basico ---");
-for (var i : int = 0; i < 5; i = i + 1) {
-    print(i);
+// ── Para basico ──
+mostrar("--- para basico ---");
+para (variable i : entero = 0; i < 5; i = i + 1) {
+    mostrar(i);
 }
 
-// ── For con cuerpo que usa la variable ──
-print("--- for con expresion ---");
-for (var j : int = 1; j < 4; j = j + 1) {
-    print(j * 2);
+// ── Para con cuerpo que usa la variable ──
+mostrar("--- para con expresion ---");
+para (variable j : entero = 1; j < 4; j = j + 1) {
+    mostrar(j * 2);
 }
 
-// ── For que no ejecuta (condicion falsa desde el inicio) ──
-print("--- for sin iteraciones ---");
-for (var k : int = 10; k < 5; k = k + 1) {
-    print(k);
+// ── Para que no ejecuta (condicion falsa desde el inicio) ──
+mostrar("--- para sin iteraciones ---");
+para (variable k : entero = 10; k < 5; k = k + 1) {
+    mostrar(k);
 }
-print("despues del for vacio");
+mostrar("despues del para vacio");
 
-// ── For con if adentro ──
-print("--- for con if adentro ---");
-for (var n : int = 0; n < 6; n = n + 1) {
-    if (n == 3) {
-        print("encontre el 3");
-    }
-}
-
-// ── For anidado ──
-print("--- for anidado ---");
-for (var x : int = 0; x < 3; x = x + 1) {
-    for (var y : int = 0; y < 3; y = y + 1) {
-        print(x + y);
+// ── Para con si adentro ──
+mostrar("--- para con si adentro ---");
+para (variable n : entero = 0; n < 6; n = n + 1) {
+    si (n == 3) {
+        mostrar("encontre el 3");
     }
 }
 
-print("--- FIN FOR ---");
+// ── Para anidado ──
+mostrar("--- para anidado ---");
+para (variable p : entero = 0; p < 3; p = p + 1) {
+    para (variable q : entero = 0; q < 3; q = q + 1) {
+        mostrar(p + q);
+    }
+}
+
+mostrar("--- FIN PARA ---");

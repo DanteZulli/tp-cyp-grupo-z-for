@@ -9,7 +9,7 @@ import lombok.Getter;
  * Analizador semantico. Recorre el AST (Abstract Syntax Tree) validando tipos,
  * redeclaraciones, variables no declaradas, operaciones invalidas y division
  * por cero.
- * No ejecuta el programa, solo acumula errores.
+ * No ejecuta el programa, solo acumula errores (con humor argentino).
  */
 public class SemanticAnalyzer extends LanguageBaseVisitor<Object> {
 
@@ -22,36 +22,36 @@ public class SemanticAnalyzer extends LanguageBaseVisitor<Object> {
     }
 
     @Override
-    public Object visitProgram(LanguageParser.ProgramContext ctx) {
-        for (var stmt : ctx.statement())
+    public Object visitPrograma(LanguageParser.ProgramaContext ctx) {
+        for (var stmt : ctx.sentencia())
             visit(stmt);
         return null;
     }
 
     @Override
-    public Object visitBlock(LanguageParser.BlockContext ctx) {
-        for (var stmt : ctx.statement())
+    public Object visitBloque(LanguageParser.BloqueContext ctx) {
+        for (var stmt : ctx.sentencia())
             visit(stmt);
         return null;
     }
 
     @Override
-    public Object visitVarDecl(LanguageParser.VarDeclContext ctx) {
+    public Object visitDeclaracionVariable(LanguageParser.DeclaracionVariableContext ctx) {
         String name = ctx.ID().getText();
-        SymbolTable.Type declType = SymbolTable.Type.fromString(ctx.type().getText());
+        SymbolTable.Type declType = SymbolTable.Type.fromString(ctx.tipo().getText());
 
         if (symTable.exists(name)) {
-            errors.add("Pará pará pará, ya declaraste '" + name + "' antes (linea "
+            errors.add("Para par� para, ya declaraste '" + name + "' antes (linea "
                     + ctx.getStart().getLine() + "). No abuses.");
             return null;
         }
 
         symTable.declare(name, declType, null, false);
 
-        if (ctx.expr() != null) {
-            SymbolTable.Type exprType = (SymbolTable.Type) visit(ctx.expr());
+        if (ctx.expresion() != null) {
+            SymbolTable.Type exprType = (SymbolTable.Type) visit(ctx.expresion());
             if (exprType != declType) {
-                errors.add("Uh amigo, no podés asignar " + exprType + " a una variable "
+                errors.add("Uh amigo, no pod�s asignar " + exprType + " a una variable "
                         + declType + "... no da. (linea " + ctx.getStart().getLine() + ")");
             } else {
                 symTable.assign(name, null);
@@ -61,107 +61,107 @@ public class SemanticAnalyzer extends LanguageBaseVisitor<Object> {
     }
 
     @Override
-    public Object visitAssignment(LanguageParser.AssignmentContext ctx) {
+    public Object visitAsignacion(LanguageParser.AsignacionContext ctx) {
         String name = ctx.ID().getText();
 
         if (!symTable.exists(name)) {
-            errors.add("Che, la variable '" + name + "' no existe. ¿Dónde la viste? (linea "
+            errors.add("Che, la variable '" + name + "' no existe. �D�nde la viste? (linea "
                     + ctx.getStart().getLine() + ")");
             return null;
         }
 
         SymbolTable.Type varType = symTable.getType(name);
-        SymbolTable.Type exprType = (SymbolTable.Type) visit(ctx.expr());
+        SymbolTable.Type exprType = (SymbolTable.Type) visit(ctx.expresion());
 
         if (exprType != varType) {
-            errors.add("Estás mezclando peras con manzanas: " + exprType + " no es " + varType
+            errors.add("Est�s mezclando peras con manzanas: " + exprType + " no es " + varType
                     + " (linea " + ctx.getStart().getLine() + ")");
         }
         return null;
     }
 
     @Override
-    public Object visitPrintStmt(LanguageParser.PrintStmtContext ctx) {
-        visit(ctx.expr());
+    public Object visitMostrarStmt(LanguageParser.MostrarStmtContext ctx) {
+        visit(ctx.expresion());
         return null;
     }
 
     @Override
-    public Object visitIfStmt(LanguageParser.IfStmtContext ctx) {
-        SymbolTable.Type condType = (SymbolTable.Type) visit(ctx.expr());
+    public Object visitSiStmt(LanguageParser.SiStmtContext ctx) {
+        SymbolTable.Type condType = (SymbolTable.Type) visit(ctx.expresion());
         if (condType != SymbolTable.Type.BOOL) {
-            errors.add("La condición del if tiene que ser booleana, no "
-                    + condType + ". No te hagas el pícaro. (linea " + ctx.getStart().getLine() + ")");
+            errors.add("La condici�n del si tiene que ser booleana, no "
+                    + condType + ". No te hagas el p�caro. (linea " + ctx.getStart().getLine() + ")");
         }
-        visit(ctx.block(0));
-        if (ctx.block().size() > 1)
-            visit(ctx.block(1));
+        visit(ctx.bloque(0));
+        if (ctx.bloque().size() > 1)
+            visit(ctx.bloque(1));
         return null;
     }
 
     @Override
-    public Object visitForStmt(LanguageParser.ForStmtContext ctx) {
-        visit(ctx.varDecl());
-        SymbolTable.Type condType = (SymbolTable.Type) visit(ctx.expr());
+    public Object visitParaStmt(LanguageParser.ParaStmtContext ctx) {
+        visit(ctx.declaracionVariable());
+        SymbolTable.Type condType = (SymbolTable.Type) visit(ctx.expresion());
         if (condType != SymbolTable.Type.BOOL) {
-            errors.add("La condición del for tiene que ser booleana, no "
+            errors.add("La condici�n del para tiene que ser booleana, no "
                     + condType + ". No te pases de vivo. (linea " + ctx.getStart().getLine() + ")");
         }
-        visit(ctx.assignment());
-        visit(ctx.block());
+        visit(ctx.asignacion());
+        visit(ctx.bloque());
         return null;
     }
 
     // ── Expresiones ───────────────────────────────────────────────────────────
 
     @Override
-    public Object visitPrimaryExpr(LanguageParser.PrimaryExprContext ctx) {
-        return visit(ctx.primary());
+    public Object visitPrimariaExp(LanguageParser.PrimariaExpContext ctx) {
+        return visit(ctx.primaria());
     }
 
     @Override
-    public Object visitNotExpr(LanguageParser.NotExprContext ctx) {
-        SymbolTable.Type t = (SymbolTable.Type) visit(ctx.expr());
+    public Object visitNoExp(LanguageParser.NoExpContext ctx) {
+        SymbolTable.Type t = (SymbolTable.Type) visit(ctx.expresion());
         if (t != SymbolTable.Type.BOOL) {
-            errors.add("! es solo para booleanos, no para " + t
+            errors.add("no es solo para booleanos, no para " + t
                     + ". No seas rebelde. (linea " + ctx.getStart().getLine() + ")");
         }
         return SymbolTable.Type.BOOL;
     }
 
     @Override
-    public Object visitUnaryMinusExpr(LanguageParser.UnaryMinusExprContext ctx) {
-        SymbolTable.Type t = (SymbolTable.Type) visit(ctx.expr());
+    public Object visitMenosUnarioExp(LanguageParser.MenosUnarioExpContext ctx) {
+        SymbolTable.Type t = (SymbolTable.Type) visit(ctx.expresion());
         if (!t.isNumeric()) {
-            errors.add("- requiere un número, no " + t
+            errors.add("- requiere un n�mero, no " + t
                     + ". No te hagas el astuto. (linea " + ctx.getStart().getLine() + ")");
         }
         return t;
     }
 
     @Override
-    public Object visitMulDivExpr(LanguageParser.MulDivExprContext ctx) {
-        SymbolTable.Type left = (SymbolTable.Type) visit(ctx.expr(0));
-        SymbolTable.Type right = (SymbolTable.Type) visit(ctx.expr(1));
+    public Object visitMulDivExp(LanguageParser.MulDivExpContext ctx) {
+        SymbolTable.Type left = (SymbolTable.Type) visit(ctx.expresion(0));
+        SymbolTable.Type right = (SymbolTable.Type) visit(ctx.expresion(1));
 
         if (!left.isNumeric() || !right.isNumeric()) {
-            errors.add("*/ solo funcionan con números, y vos pasaste "
+            errors.add("* y / solo funcionan con n�meros, y vos pasaste "
                     + left + " y " + right + ". No da. (linea " + ctx.getStart().getLine() + ")");
             return SymbolTable.Type.INT;
         }
 
         if (ctx.op.getText().equals("/")) {
-            LanguageParser.ExprContext rightExpr = ctx.expr(1);
-            if (rightExpr instanceof LanguageParser.PrimaryExprContext primCtx) {
-                LanguageParser.PrimaryContext prim = primCtx.primary();
-                if (prim instanceof LanguageParser.IntLiteralContext intCtx) {
-                    if (Integer.parseInt(intCtx.INT().getText()) == 0) {
-                        errors.add("No dividas por cero, crack. No es físicamente posible. (linea "
+            LanguageParser.ExpresionContext rightExpr = ctx.expresion(1);
+            if (rightExpr instanceof LanguageParser.PrimariaExpContext primCtx) {
+                LanguageParser.PrimariaContext prim = primCtx.primaria();
+                if (prim instanceof LanguageParser.EnteroLiteralContext intCtx) {
+                    if (Integer.parseInt(intCtx.ENTERO().getText()) == 0) {
+                        errors.add("No dividas por cero, crack. No es f�sicamente posible. (linea "
                                 + ctx.getStart().getLine() + ")");
                     }
-                } else if (prim instanceof LanguageParser.FloatLiteralContext flCtx) {
-                    if (Double.parseDouble(flCtx.FLOAT().getText()) == 0.0) {
-                        errors.add("No dividas por cero, crack. No es físicamente posible. (linea "
+                } else if (prim instanceof LanguageParser.RealLiteralContext flCtx) {
+                    if (Double.parseDouble(flCtx.REAL().getText()) == 0.0) {
+                        errors.add("No dividas por cero, crack. No es f�sicamente posible. (linea "
                                 + ctx.getStart().getLine() + ")");
                     }
                 }
@@ -174,9 +174,9 @@ public class SemanticAnalyzer extends LanguageBaseVisitor<Object> {
     }
 
     @Override
-    public Object visitAddSubExpr(LanguageParser.AddSubExprContext ctx) {
-        SymbolTable.Type left = (SymbolTable.Type) visit(ctx.expr(0));
-        SymbolTable.Type right = (SymbolTable.Type) visit(ctx.expr(1));
+    public Object visitSumaRestExp(LanguageParser.SumaRestExpContext ctx) {
+        SymbolTable.Type left = (SymbolTable.Type) visit(ctx.expresion(0));
+        SymbolTable.Type right = (SymbolTable.Type) visit(ctx.expresion(1));
 
         if (!left.isNumeric() || !right.isNumeric()) {
             errors.add(left + " y " + right + " no se pueden sumar/restar. No da ni a palos. (linea "
@@ -190,14 +190,14 @@ public class SemanticAnalyzer extends LanguageBaseVisitor<Object> {
     }
 
     @Override
-    public Object visitRelationalExpr(LanguageParser.RelationalExprContext ctx) {
-        SymbolTable.Type left = (SymbolTable.Type) visit(ctx.expr(0));
-        SymbolTable.Type right = (SymbolTable.Type) visit(ctx.expr(1));
+    public Object visitRelacionalExp(LanguageParser.RelacionalExpContext ctx) {
+        SymbolTable.Type left = (SymbolTable.Type) visit(ctx.expresion(0));
+        SymbolTable.Type right = (SymbolTable.Type) visit(ctx.expresion(1));
 
         if (left == SymbolTable.Type.STRING || right == SymbolTable.Type.STRING) {
             String op = ctx.op.getText();
             if (!op.equals("==") && !op.equals("!=")) {
-                errors.add("Con strings solo se puede usar == o !=, no "
+                errors.add("Con texto solo se puede usar == o !=, no "
                         + op + ". No inventes, loco. (linea " + ctx.getStart().getLine() + ")");
             }
         } else if (!left.isNumeric() || !right.isNumeric()) {
@@ -209,49 +209,49 @@ public class SemanticAnalyzer extends LanguageBaseVisitor<Object> {
     }
 
     @Override
-    public Object visitAndExpr(LanguageParser.AndExprContext ctx) {
-        checkBooleanOp(ctx.expr(0), ctx.expr(1), ctx.getStart().getLine());
+    public Object visitYExp(LanguageParser.YExpContext ctx) {
+        checkBooleanOp(ctx.expresion(0), ctx.expresion(1), ctx.getStart().getLine());
         return SymbolTable.Type.BOOL;
     }
 
     @Override
-    public Object visitOrExpr(LanguageParser.OrExprContext ctx) {
-        checkBooleanOp(ctx.expr(0), ctx.expr(1), ctx.getStart().getLine());
+    public Object visitOExp(LanguageParser.OExpContext ctx) {
+        checkBooleanOp(ctx.expresion(0), ctx.expresion(1), ctx.getStart().getLine());
         return SymbolTable.Type.BOOL;
     }
 
-    private void checkBooleanOp(LanguageParser.ExprContext left, LanguageParser.ExprContext right, int line) {
+    private void checkBooleanOp(LanguageParser.ExpresionContext left, LanguageParser.ExpresionContext right, int line) {
         SymbolTable.Type lt = (SymbolTable.Type) visit(left);
         SymbolTable.Type rt = (SymbolTable.Type) visit(right);
         if (lt != SymbolTable.Type.BOOL || rt != SymbolTable.Type.BOOL) {
-            errors.add("&& y || son solo para booleanos. No da mezclar. (linea " + line + ")");
+            errors.add("y y o son solo para booleanos. No da mezclar. (linea " + line + ")");
         }
     }
 
-    // ── Primary ───────────────────────────────────────────────────────────────
+    // ── Primaria ──────────────────────────────────────────────────────────────
 
     @Override
-    public Object visitIntLiteral(LanguageParser.IntLiteralContext ctx) {
+    public Object visitEnteroLiteral(LanguageParser.EnteroLiteralContext ctx) {
         return SymbolTable.Type.INT;
     }
 
     @Override
-    public Object visitFloatLiteral(LanguageParser.FloatLiteralContext ctx) {
+    public Object visitRealLiteral(LanguageParser.RealLiteralContext ctx) {
         return SymbolTable.Type.FLOAT;
     }
 
     @Override
-    public Object visitStringLiteral(LanguageParser.StringLiteralContext ctx) {
+    public Object visitTextoLiteral(LanguageParser.TextoLiteralContext ctx) {
         return SymbolTable.Type.STRING;
     }
 
     @Override
-    public Object visitTrueLiteral(LanguageParser.TrueLiteralContext ctx) {
+    public Object visitVerdadLiteral(LanguageParser.VerdadLiteralContext ctx) {
         return SymbolTable.Type.BOOL;
     }
 
     @Override
-    public Object visitFalseLiteral(LanguageParser.FalseLiteralContext ctx) {
+    public Object visitFalsoLiteral(LanguageParser.FalsoLiteralContext ctx) {
         return SymbolTable.Type.BOOL;
     }
 
@@ -259,7 +259,7 @@ public class SemanticAnalyzer extends LanguageBaseVisitor<Object> {
     public Object visitIdRef(LanguageParser.IdRefContext ctx) {
         String name = ctx.ID().getText();
         if (!symTable.exists(name)) {
-            errors.add("Che, la variable '" + name + "' no existe. ¿Estás seguro de que la declaraste? (linea "
+            errors.add("Che, la variable '" + name + "' no existe. �Est�s seguro de que la declaraste? (linea "
                     + ctx.getStart().getLine() + ")");
             return SymbolTable.Type.INT;
         }
@@ -267,7 +267,7 @@ public class SemanticAnalyzer extends LanguageBaseVisitor<Object> {
     }
 
     @Override
-    public Object visitParenExpr(LanguageParser.ParenExprContext ctx) {
-        return visit(ctx.expr());
+    public Object visitParenExp(LanguageParser.ParenExpContext ctx) {
+        return visit(ctx.expresion());
     }
 }

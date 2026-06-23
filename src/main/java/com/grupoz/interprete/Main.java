@@ -30,7 +30,7 @@ public class Main {
             LanguageLexer lexer = new LanguageLexer(in);
             CommonTokenStream tokens = new CommonTokenStream(lexer);
             LanguageParser parser = new LanguageParser(tokens);
-            LanguageParser.ProgramContext tree = parser.program();
+            LanguageParser.ProgramaContext tree = parser.programa();
 
             // ── Fase 2: Analisis semantico ──
             // El SemanticAnalyzer recorre el AST y verifica tipos,

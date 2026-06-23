@@ -2,53 +2,53 @@ grammar Language;
 
 // ─── Parser Rules ────────────────────────────────────────────────────────────
 
-program: statement* EOF;
+programa: sentencia* EOF;
 
-statement:
-	varDecl ';'
-	| assignment ';'
-	| printStmt ';'
-	| ifStmt
-	| forStmt;
+sentencia:
+	declaracionVariable ';'
+	| asignacion ';'
+	| mostrarStmt ';'
+	| siStmt
+	| paraStmt;
 
-varDecl: 'var' ID ':' type ('=' expr)?;
+declaracionVariable: 'variable' ID ':' tipo ('=' expresion)?;
 
-assignment: ID '=' expr;
+asignacion: ID '=' expresion;
 
-printStmt: 'print' '(' expr ')';
+mostrarStmt: 'mostrar' '(' expresion ')';
 
-block: '{' statement* '}';
+bloque: '{' sentencia* '}';
 
-ifStmt: 'if' '(' expr ')' block ('else' block)?;
+siStmt: 'si' '(' expresion ')' bloque ('sino' bloque)?;
 
-forStmt: 'for' '(' varDecl ';' expr ';' assignment ')' block;
+paraStmt: 'para' '(' declaracionVariable ';' expresion ';' asignacion ')' bloque;
 
-type: 'int' | 'float' | 'string' | 'bool';
+tipo: 'entero' | 'real' | 'texto' | 'boleano';
 
-expr:
-	primary														# primaryExpr
-	| '!' expr													# notExpr
-	| '-' expr													# unaryMinusExpr
-	| expr op = ('*' | '/') expr								# mulDivExpr
-	| expr op = ('+' | '-') expr								# addSubExpr
-	| expr op = ('==' | '!=' | '<' | '>' | '<=' | '>=') expr	# relationalExpr
-	| expr '&&' expr											# andExpr
-	| expr '||' expr											# orExpr;
+expresion:
+	primaria													# primariaExp
+	| 'no' expresion											# noExp
+	| '-' expresion												# menosUnarioExp
+	| expresion op = ('*' | '/') expresion						# mulDivExp
+	| expresion op = ('+' | '-') expresion						# sumaRestExp
+	| expresion op = ('==' | '!=' | '<' | '>' | '<=' | '>=') expresion	# relacionalExp
+	| expresion 'y' expresion									# yExp
+	| expresion 'o' expresion									# oExp;
 
-primary:
-	INT				# intLiteral
-	| FLOAT			# floatLiteral
-	| STRING		# stringLiteral
-	| 'true'		# trueLiteral
-	| 'false'		# falseLiteral
-	| ID			# idRef
-	| '(' expr ')'	# parenExpr;
+primaria:
+	ENTERO				# enteroLiteral
+	| REAL				# realLiteral
+	| TEXTO				# textoLiteral
+	| 'verdad'			# verdadLiteral
+	| 'falso'			# falsoLiteral
+	| ID				# idRef
+	| '(' expresion ')'	# parenExp;
 
 // ─── Lexer Rules ─────────────────────────────────────────────────────────────
 
-FLOAT: [0-9]+ '.' [0-9]+;
-INT: [0-9]+;
-STRING: '"' (~["\r\n])* '"';
+REAL: [0-9]+ '.' [0-9]+;
+ENTERO: [0-9]+;
+TEXTO: '"' (~["\r\n])* '"';
 ID: [a-zA-Z_][a-zA-Z0-9_]*;
 
 LINE_COMMENT: '//' ~[\r\n]* -> skip;

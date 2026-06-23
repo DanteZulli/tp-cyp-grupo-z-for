@@ -18,11 +18,11 @@ public class SymbolTable {
 
         public static Type fromString(String s) {
             return switch (s) {
-                case "int" -> INT;
-                case "float" -> FLOAT;
-                case "string" -> STRING;
-                case "bool" -> BOOL;
-                default -> throw new IllegalArgumentException("Unknown type: " + s);
+                case "entero" -> INT;
+                case "real" -> FLOAT;
+                case "texto" -> STRING;
+                case "boleano" -> BOOL;
+                default -> throw new IllegalArgumentException("Tipo desconocido: " + s);
             };
         }
 

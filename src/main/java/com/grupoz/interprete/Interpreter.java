@@ -3,7 +3,7 @@ package com.grupoz.interprete;
 /**
  * Interprete del lenguaje. Recorre el AST (Abstract Syntax Tree)
  * que genera ANTLR y ejecuta cada instruccion:
- * declaraciones, asignaciones, expresiones, print y if-else.
+ * declaraciones, asignaciones, expresiones, mostrar, si-sino y para.
  * Utiliza SymbolTable para almacenar y recuperar valores.
  */
 public class Interpreter extends LanguageBaseVisitor<Object> {
@@ -11,27 +11,27 @@ public class Interpreter extends LanguageBaseVisitor<Object> {
     private final SymbolTable symTable = new SymbolTable();
 
     @Override
-    public Object visitProgram(LanguageParser.ProgramContext ctx) {
-        for (var stmt : ctx.statement())
+    public Object visitPrograma(LanguageParser.ProgramaContext ctx) {
+        for (var stmt : ctx.sentencia())
             visit(stmt);
         return null;
     }
 
     @Override
-    public Object visitBlock(LanguageParser.BlockContext ctx) {
-        for (var stmt : ctx.statement())
+    public Object visitBloque(LanguageParser.BloqueContext ctx) {
+        for (var stmt : ctx.sentencia())
             visit(stmt);
         return null;
     }
 
     @Override
-    public Object visitVarDecl(LanguageParser.VarDeclContext ctx) {
+    public Object visitDeclaracionVariable(LanguageParser.DeclaracionVariableContext ctx) {
         String name = ctx.ID().getText();
-        SymbolTable.Type type = SymbolTable.Type.fromString(ctx.type().getText());
+        SymbolTable.Type type = SymbolTable.Type.fromString(ctx.tipo().getText());
         Object value = null;
         boolean initialized = false;
-        if (ctx.expr() != null) {
-            value = visit(ctx.expr());
+        if (ctx.expresion() != null) {
+            value = visit(ctx.expresion());
             initialized = true;
         }
         symTable.declare(name, type, value, initialized);
@@ -39,9 +39,9 @@ public class Interpreter extends LanguageBaseVisitor<Object> {
     }
 
     @Override
-    public Object visitAssignment(LanguageParser.AssignmentContext ctx) {
+    public Object visitAsignacion(LanguageParser.AsignacionContext ctx) {
         String name = ctx.ID().getText();
-        Object value = visit(ctx.expr());
+        Object value = visit(ctx.expresion());
         SymbolTable.Type targetType = symTable.getType(name);
         if (value instanceof Integer && targetType == SymbolTable.Type.FLOAT) {
             value = ((Integer) value).doubleValue();
@@ -51,28 +51,28 @@ public class Interpreter extends LanguageBaseVisitor<Object> {
     }
 
     @Override
-    public Object visitPrintStmt(LanguageParser.PrintStmtContext ctx) {
-        System.out.println(visit(ctx.expr()));
+    public Object visitMostrarStmt(LanguageParser.MostrarStmtContext ctx) {
+        System.out.println(visit(ctx.expresion()));
         return null;
     }
 
     @Override
-    public Object visitIfStmt(LanguageParser.IfStmtContext ctx) {
-        boolean condition = (boolean) visit(ctx.expr());
+    public Object visitSiStmt(LanguageParser.SiStmtContext ctx) {
+        boolean condition = (boolean) visit(ctx.expresion());
         if (condition) {
-            visit(ctx.block(0));
-        } else if (ctx.block().size() > 1) {
-            visit(ctx.block(1));
+            visit(ctx.bloque(0));
+        } else if (ctx.bloque().size() > 1) {
+            visit(ctx.bloque(1));
         }
         return null;
     }
 
     @Override
-    public Object visitForStmt(LanguageParser.ForStmtContext ctx) {
-        visit(ctx.varDecl());
-        while ((boolean) visit(ctx.expr())) {
-            visit(ctx.block());
-            visit(ctx.assignment());
+    public Object visitParaStmt(LanguageParser.ParaStmtContext ctx) {
+        visit(ctx.declaracionVariable());
+        while ((boolean) visit(ctx.expresion())) {
+            visit(ctx.bloque());
+            visit(ctx.asignacion());
         }
         return null;
     }
@@ -80,25 +80,25 @@ public class Interpreter extends LanguageBaseVisitor<Object> {
     // ── Expresiones ───────────────────────────────────────────────────────────
 
     @Override
-    public Object visitPrimaryExpr(LanguageParser.PrimaryExprContext ctx) {
-        return visit(ctx.primary());
+    public Object visitPrimariaExp(LanguageParser.PrimariaExpContext ctx) {
+        return visit(ctx.primaria());
     }
 
     @Override
-    public Object visitNotExpr(LanguageParser.NotExprContext ctx) {
-        return !(boolean) visit(ctx.expr());
+    public Object visitNoExp(LanguageParser.NoExpContext ctx) {
+        return !(boolean) visit(ctx.expresion());
     }
 
     @Override
-    public Object visitUnaryMinusExpr(LanguageParser.UnaryMinusExprContext ctx) {
-        Object val = visit(ctx.expr());
+    public Object visitMenosUnarioExp(LanguageParser.MenosUnarioExpContext ctx) {
+        Object val = visit(ctx.expresion());
         return val instanceof Integer ? -(int) val : -(double) val;
     }
 
     @Override
-    public Object visitMulDivExpr(LanguageParser.MulDivExprContext ctx) {
-        Object left = visit(ctx.expr(0));
-        Object right = visit(ctx.expr(1));
+    public Object visitMulDivExp(LanguageParser.MulDivExpContext ctx) {
+        Object left = visit(ctx.expresion(0));
+        Object right = visit(ctx.expresion(1));
         boolean isFloat = left instanceof Double || right instanceof Double;
         if (isFloat) {
             return ctx.op.getText().equals("*")
@@ -111,9 +111,9 @@ public class Interpreter extends LanguageBaseVisitor<Object> {
     }
 
     @Override
-    public Object visitAddSubExpr(LanguageParser.AddSubExprContext ctx) {
-        Object left = visit(ctx.expr(0));
-        Object right = visit(ctx.expr(1));
+    public Object visitSumaRestExp(LanguageParser.SumaRestExpContext ctx) {
+        Object left = visit(ctx.expresion(0));
+        Object right = visit(ctx.expresion(1));
         boolean isFloat = left instanceof Double || right instanceof Double;
         if (isFloat) {
             return ctx.op.getText().equals("+")
@@ -126,9 +126,9 @@ public class Interpreter extends LanguageBaseVisitor<Object> {
     }
 
     @Override
-    public Object visitRelationalExpr(LanguageParser.RelationalExprContext ctx) {
-        Object left = visit(ctx.expr(0));
-        Object right = visit(ctx.expr(1));
+    public Object visitRelacionalExp(LanguageParser.RelacionalExpContext ctx) {
+        Object left = visit(ctx.expresion(0));
+        Object right = visit(ctx.expresion(1));
         String op = ctx.op.getText();
         if (left instanceof String) {
             return op.equals("==") ? left.equals(right) : !left.equals(right);
@@ -146,40 +146,40 @@ public class Interpreter extends LanguageBaseVisitor<Object> {
     }
 
     @Override
-    public Object visitAndExpr(LanguageParser.AndExprContext ctx) {
-        return (boolean) visit(ctx.expr(0)) && (boolean) visit(ctx.expr(1));
+    public Object visitYExp(LanguageParser.YExpContext ctx) {
+        return (boolean) visit(ctx.expresion(0)) && (boolean) visit(ctx.expresion(1));
     }
 
     @Override
-    public Object visitOrExpr(LanguageParser.OrExprContext ctx) {
-        return (boolean) visit(ctx.expr(0)) || (boolean) visit(ctx.expr(1));
+    public Object visitOExp(LanguageParser.OExpContext ctx) {
+        return (boolean) visit(ctx.expresion(0)) || (boolean) visit(ctx.expresion(1));
     }
 
-    // ── Primary ───────────────────────────────────────────────────────────────
+    // ── Primaria ──────────────────────────────────────────────────────────────
 
     @Override
-    public Object visitIntLiteral(LanguageParser.IntLiteralContext ctx) {
-        return Integer.parseInt(ctx.INT().getText());
-    }
-
-    @Override
-    public Object visitFloatLiteral(LanguageParser.FloatLiteralContext ctx) {
-        return Double.parseDouble(ctx.FLOAT().getText());
+    public Object visitEnteroLiteral(LanguageParser.EnteroLiteralContext ctx) {
+        return Integer.parseInt(ctx.ENTERO().getText());
     }
 
     @Override
-    public Object visitStringLiteral(LanguageParser.StringLiteralContext ctx) {
-        String raw = ctx.STRING().getText();
+    public Object visitRealLiteral(LanguageParser.RealLiteralContext ctx) {
+        return Double.parseDouble(ctx.REAL().getText());
+    }
+
+    @Override
+    public Object visitTextoLiteral(LanguageParser.TextoLiteralContext ctx) {
+        String raw = ctx.TEXTO().getText();
         return raw.substring(1, raw.length() - 1);
     }
 
     @Override
-    public Object visitTrueLiteral(LanguageParser.TrueLiteralContext ctx) {
+    public Object visitVerdadLiteral(LanguageParser.VerdadLiteralContext ctx) {
         return true;
     }
 
     @Override
-    public Object visitFalseLiteral(LanguageParser.FalseLiteralContext ctx) {
+    public Object visitFalsoLiteral(LanguageParser.FalsoLiteralContext ctx) {
         return false;
     }
 
@@ -189,8 +189,8 @@ public class Interpreter extends LanguageBaseVisitor<Object> {
     }
 
     @Override
-    public Object visitParenExpr(LanguageParser.ParenExprContext ctx) {
-        return visit(ctx.expr());
+    public Object visitParenExp(LanguageParser.ParenExpContext ctx) {
+        return visit(ctx.expresion());
     }
 
     // ── Helpers ───────────────────────────────────────────────────────────────
