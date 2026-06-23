@@ -26,6 +26,7 @@ Lenguaje imperativo simple con tipado estático explícito. Soporta `int`, `floa
 - **Coerción implícita:** al asignar un entero a una variable `float`, el `Interpreter` convierte el valor automáticamente.
 - **Sintaxis Pascal-like:** `var nombre : tipo = expr` para declaraciones, `print(...)` para salida.
 - **Variable de control del for en scope global:** la variable declarada en el encabezado del `for` (`var i : int = 0`) queda disponible en la tabla de símbolos global, consistente con el resto del lenguaje que no implementa scoping por bloque.
+- **Mensajes de error con humor argentino:** los errores semánticos tienen un tono informal y rioplatense ("Che, la variable 'x' no existe", "No dividas por cero, crack"), para que programar sea menos frustrante.
 
 ## Compilación y ejecución
 

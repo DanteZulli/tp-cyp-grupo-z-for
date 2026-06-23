@@ -41,7 +41,8 @@ public class SemanticAnalyzer extends LanguageBaseVisitor<Object> {
         SymbolTable.Type declType = SymbolTable.Type.fromString(ctx.type().getText());
 
         if (symTable.exists(name)) {
-            errors.add("Variable '" + name + "' ya declarada (linea " + ctx.getStart().getLine() + ")");
+            errors.add("Pará pará pará, ya declaraste '" + name + "' antes (linea "
+                    + ctx.getStart().getLine() + "). No abuses.");
             return null;
         }
 
@@ -50,8 +51,8 @@ public class SemanticAnalyzer extends LanguageBaseVisitor<Object> {
         if (ctx.expr() != null) {
             SymbolTable.Type exprType = (SymbolTable.Type) visit(ctx.expr());
             if (exprType != declType) {
-                errors.add("Error de tipo (linea " + ctx.getStart().getLine()
-                        + "): no se puede asignar " + exprType + " a variable " + declType);
+                errors.add("Uh amigo, no podés asignar " + exprType + " a una variable "
+                        + declType + "... no da. (linea " + ctx.getStart().getLine() + ")");
             } else {
                 symTable.assign(name, null);
             }
@@ -64,7 +65,8 @@ public class SemanticAnalyzer extends LanguageBaseVisitor<Object> {
         String name = ctx.ID().getText();
 
         if (!symTable.exists(name)) {
-            errors.add("Variable '" + name + "' no declarada (linea " + ctx.getStart().getLine() + ")");
+            errors.add("Che, la variable '" + name + "' no existe. ¿Dónde la viste? (linea "
+                    + ctx.getStart().getLine() + ")");
             return null;
         }
 
@@ -72,8 +74,8 @@ public class SemanticAnalyzer extends LanguageBaseVisitor<Object> {
         SymbolTable.Type exprType = (SymbolTable.Type) visit(ctx.expr());
 
         if (exprType != varType) {
-            errors.add("Error de tipo (linea " + ctx.getStart().getLine()
-                    + "): no se puede asignar " + exprType + " a variable " + varType);
+            errors.add("Estás mezclando peras con manzanas: " + exprType + " no es " + varType
+                    + " (linea " + ctx.getStart().getLine() + ")");
         }
         return null;
     }
@@ -88,8 +90,8 @@ public class SemanticAnalyzer extends LanguageBaseVisitor<Object> {
     public Object visitIfStmt(LanguageParser.IfStmtContext ctx) {
         SymbolTable.Type condType = (SymbolTable.Type) visit(ctx.expr());
         if (condType != SymbolTable.Type.BOOL) {
-            errors.add("Error de tipo (linea " + ctx.getStart().getLine()
-                    + "): condicion if debe ser bool, no " + condType);
+            errors.add("La condición del if tiene que ser booleana, no "
+                    + condType + ". No te hagas el pícaro. (linea " + ctx.getStart().getLine() + ")");
         }
         visit(ctx.block(0));
         if (ctx.block().size() > 1)
@@ -102,8 +104,8 @@ public class SemanticAnalyzer extends LanguageBaseVisitor<Object> {
         visit(ctx.varDecl());
         SymbolTable.Type condType = (SymbolTable.Type) visit(ctx.expr());
         if (condType != SymbolTable.Type.BOOL) {
-            errors.add("Error de tipo (linea " + ctx.getStart().getLine()
-                    + "): condicion for debe ser bool, no " + condType);
+            errors.add("La condición del for tiene que ser booleana, no "
+                    + condType + ". No te pases de vivo. (linea " + ctx.getStart().getLine() + ")");
         }
         visit(ctx.assignment());
         visit(ctx.block());
@@ -121,8 +123,8 @@ public class SemanticAnalyzer extends LanguageBaseVisitor<Object> {
     public Object visitNotExpr(LanguageParser.NotExprContext ctx) {
         SymbolTable.Type t = (SymbolTable.Type) visit(ctx.expr());
         if (t != SymbolTable.Type.BOOL) {
-            errors.add("Error de tipo (linea " + ctx.getStart().getLine()
-                    + "): ! requiere bool, no " + t);
+            errors.add("! es solo para booleanos, no para " + t
+                    + ". No seas rebelde. (linea " + ctx.getStart().getLine() + ")");
         }
         return SymbolTable.Type.BOOL;
     }
@@ -131,8 +133,8 @@ public class SemanticAnalyzer extends LanguageBaseVisitor<Object> {
     public Object visitUnaryMinusExpr(LanguageParser.UnaryMinusExprContext ctx) {
         SymbolTable.Type t = (SymbolTable.Type) visit(ctx.expr());
         if (!t.isNumeric()) {
-            errors.add("Error de tipo (linea " + ctx.getStart().getLine()
-                    + "): - requiere valor numerico, no " + t);
+            errors.add("- requiere un número, no " + t
+                    + ". No te hagas el astuto. (linea " + ctx.getStart().getLine() + ")");
         }
         return t;
     }
@@ -143,8 +145,8 @@ public class SemanticAnalyzer extends LanguageBaseVisitor<Object> {
         SymbolTable.Type right = (SymbolTable.Type) visit(ctx.expr(1));
 
         if (!left.isNumeric() || !right.isNumeric()) {
-            errors.add("Error de tipo (linea " + ctx.getStart().getLine()
-                    + "): */ requiere operandos numericos");
+            errors.add("*/ solo funcionan con números, y vos pasaste "
+                    + left + " y " + right + ". No da. (linea " + ctx.getStart().getLine() + ")");
             return SymbolTable.Type.INT;
         }
 
@@ -154,11 +156,13 @@ public class SemanticAnalyzer extends LanguageBaseVisitor<Object> {
                 LanguageParser.PrimaryContext prim = primCtx.primary();
                 if (prim instanceof LanguageParser.IntLiteralContext intCtx) {
                     if (Integer.parseInt(intCtx.INT().getText()) == 0) {
-                        errors.add("Division por cero (linea " + ctx.getStart().getLine() + ")");
+                        errors.add("No dividas por cero, crack. No es físicamente posible. (linea "
+                                + ctx.getStart().getLine() + ")");
                     }
                 } else if (prim instanceof LanguageParser.FloatLiteralContext flCtx) {
                     if (Double.parseDouble(flCtx.FLOAT().getText()) == 0.0) {
-                        errors.add("Division por cero (linea " + ctx.getStart().getLine() + ")");
+                        errors.add("No dividas por cero, crack. No es físicamente posible. (linea "
+                                + ctx.getStart().getLine() + ")");
                     }
                 }
             }
@@ -175,8 +179,8 @@ public class SemanticAnalyzer extends LanguageBaseVisitor<Object> {
         SymbolTable.Type right = (SymbolTable.Type) visit(ctx.expr(1));
 
         if (!left.isNumeric() || !right.isNumeric()) {
-            errors.add("Error de tipo (linea " + ctx.getStart().getLine()
-                    + "): +- requiere operandos numericos");
+            errors.add(left + " y " + right + " no se pueden sumar/restar. No da ni a palos. (linea "
+                    + ctx.getStart().getLine() + ")");
             return SymbolTable.Type.INT;
         }
 
@@ -193,12 +197,12 @@ public class SemanticAnalyzer extends LanguageBaseVisitor<Object> {
         if (left == SymbolTable.Type.STRING || right == SymbolTable.Type.STRING) {
             String op = ctx.op.getText();
             if (!op.equals("==") && !op.equals("!=")) {
-                errors.add("Error de tipo (linea " + ctx.getStart().getLine()
-                        + "): no se puede usar " + op + " con strings");
+                errors.add("Con strings solo se puede usar == o !=, no "
+                        + op + ". No inventes, loco. (linea " + ctx.getStart().getLine() + ")");
             }
         } else if (!left.isNumeric() || !right.isNumeric()) {
-            errors.add("Error de tipo (linea " + ctx.getStart().getLine()
-                    + "): operadores relacionales requieren tipos comparables");
+            errors.add("Estos tipos no se pueden comparar ni en pedo. (linea "
+                    + ctx.getStart().getLine() + ")");
         }
 
         return SymbolTable.Type.BOOL;
@@ -220,7 +224,7 @@ public class SemanticAnalyzer extends LanguageBaseVisitor<Object> {
         SymbolTable.Type lt = (SymbolTable.Type) visit(left);
         SymbolTable.Type rt = (SymbolTable.Type) visit(right);
         if (lt != SymbolTable.Type.BOOL || rt != SymbolTable.Type.BOOL) {
-            errors.add("Error de tipo (linea " + line + "): operadores logicos requieren bool");
+            errors.add("&& y || son solo para booleanos. No da mezclar. (linea " + line + ")");
         }
     }
 
@@ -255,7 +259,8 @@ public class SemanticAnalyzer extends LanguageBaseVisitor<Object> {
     public Object visitIdRef(LanguageParser.IdRefContext ctx) {
         String name = ctx.ID().getText();
         if (!symTable.exists(name)) {
-            errors.add("Variable '" + name + "' no declarada (linea " + ctx.getStart().getLine() + ")");
+            errors.add("Che, la variable '" + name + "' no existe. ¿Estás seguro de que la declaraste? (linea "
+                    + ctx.getStart().getLine() + ")");
             return SymbolTable.Type.INT;
         }
         return symTable.getType(name);
