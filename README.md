@@ -55,4 +55,9 @@ if (x > 5) {
 // Operadores relacionales y logicos
 var a : bool = x == 10;
 var b : bool = !a && ok;
+
+// Iteracion for (Variante 2)
+for (var i : int = 0; i < 5; i = i + 1) {
+    print(i);
+}
 ```
