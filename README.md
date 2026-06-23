@@ -1,53 +1,53 @@
-# Int�rprete con ANTLR
+# Intérprete con ANTLR
 
-**Licenciatura en Sistemas � Conceptos y Paradigmas de Lenguajes de Programaci�n � 2026**
+**Licenciatura en Sistemas  -  Conceptos y Paradigmas de Lenguajes de Programación  -  2026**
 
-**Equipo docente:** Ing. Elida Leoni � Lic. Tomas Silvestre
+**Equipo docente:** Ing. Elida Leoni  -  Lic. Tomas Silvestre
 
 ## Integrantes
 
-- Mendieta, Gabriel � 41805105
-- Zulli, Dante � 45630783
+- Mendieta, Gabriel  -  41805105
+- Zulli, Dante  -  45630783
 
 ## Variante asignada
 
-**Variante 2: for** � Iteraci�n con variable de control.
+**Variante 2: for**  -  Iteración con variable de control.
 
-## Descripci�n del lenguaje
+## Descripción del lenguaje
 
-Lenguaje imperativo simple con tipado est�tico expl�cito y **keywords en espa�ol rioplatense**.
+Lenguaje imperativo simple con tipado estático explícito y **keywords en español rioplatense**.
 Soporta `entero`, `real`, `texto` y `boleano`.
 Las variables se declaran con `variable nombre : tipo (= valor)?`.
-Expresiones aritm�ticas (`+`, `-`, `*`, `/`), relacionales (`==`, `!=`, `<`, `>`, `<=`, `>=`)
-y l�gicas (`no`, `y`, `o`).
+Expresiones aritméticas (`+`, `-`, `*`, `/`), relacionales (`==`, `!=`, `<`, `>`, `<=`, `>=`)
+y lógicas (`no`, `y`, `o`).
 Estructuras de control: `si-sino` y la variante diferencial `para`.
 Salida por consola con `mostrar()`.
-Comentarios de l�nea (`//`) y bloque (`/* */`).
+Comentarios de línea (`//`) y bloque (`/* */`).
 
-## Decisiones de dise�o
+## Decisiones de diseño
 
 - **Visitor pattern:** Se utiliza `LanguageBaseVisitor` para recorrer el AST (tal como exige la
-  gu�a), separando la l�gica en dos visitors: `SemanticAnalyzer` (validaci�n) e `Interpreter`
-  (ejecuci�n).
-- **Pipeline en 3 fases:** parseo (ANTLR) � an�lisis sem�ntico � interpretaci�n. Si hay errores
-  sem�nticos no se ejecuta.
-- **Tabla de s�mbolos compartida:** `SymbolTable` es una clase independiente usada por ambos
+  guía), separando la lógica en dos visitors: `SemanticAnalyzer` (validación) e `Interpreter`
+  (ejecución).
+- **Pipeline en 3 fases:** parseo (ANTLR) → análisis semántico → interpretación. Si hay errores
+  semánticos no se ejecuta.
+- **Tabla de símbolos compartida:** `SymbolTable` es una clase independiente usada por ambos
   visitors, con tipado mediante `enum Type`.
-- **Type checking por visitor:** cada visitor de expresi�n retorna `SymbolTable.Type`, lo que
+- **Type checking por visitor:** cada visitor de expresión retorna `SymbolTable.Type`, lo que
   permite verificar compatibilidad sin necesidad de un sistema de tipos separado.
-- **Coerci�n impl�cita:** al asignar un entero a una variable `real`, el `Interpreter` convierte
-  el valor autom�ticamente.
-- **Sintaxis en espa�ol argentino:** todos los keywords del lenguaje est�n en espa�ol
+- **Coerción implícita:** al asignar un entero a una variable `real`, el `Interpreter` convierte
+  el valor automáticamente.
+- **Sintaxis en español argentino:** todos los keywords del lenguaje están en español
   rioplatense (`variable`, `entero`, `real`, `texto`, `boleano`, `si`, `sino`, `para`, `mostrar`,
-  `verdad`, `falso`, `no`, `y`, `o`), para que programar se sienta m�s cercano.
-- **Mensajes de error con humor argentino:** los errores sem�nticos tienen un tono informal
+  `verdad`, `falso`, `no`, `y`, `o`), para que programar se sienta más cercano.
+- **Mensajes de error con humor argentino:** los errores semánticos tienen un tono informal
   rioplatense ("Che, la variable 'x' no existe", "No dividas por cero, crack"), para que
   programar sea menos frustrante.
 - **Variable de control del `para` en scope global:** la variable declarada en el encabezado del
-  `para` (`variable i : entero = 0`) queda disponible en la tabla de s�mbolos global, consistente
+  `para` (`variable i : entero = 0`) queda disponible en la tabla de símbolos global, consistente
   con el resto del lenguaje que no implementa scoping por bloque.
 
-## Compilaci�n y ejecuci�n
+## Compilación y ejecución
 
 ```bash
 mvn clean package
@@ -82,21 +82,21 @@ para (variable i : entero = 0; i < 5; i = i + 1) {
 }
 ```
 
-## Keywords en espa�ol
+## Keywords en español
 
-| ingl�s     | argentino   |
-|------------|-------------|
-| `var`      | `variable`  |
-| `int`      | `entero`    |
-| `float`    | `real`      |
-| `string`   | `texto`     |
-| `bool`     | `boleano`   |
-| `if`       | `si`        |
-| `else`     | `sino`      |
-| `for`      | `para`      |
-| `print`    | `mostrar`   |
-| `true`     | `verdad`    |
-| `false`    | `falso`     |
-| `!`        | `no`        |
-| `&&`       | `y`         |
-| `\|\|`     | `o`        |
+| inglés     | argentino   |
+|----------------|-------------|
+| `var`         | `variable`  |
+| `int`         | `entero`    |
+| `float`       | `real`      |
+| `string`      | `texto`     |
+| `bool`        | `boleano`   |
+| `if`          | `si`        |
+| `else`        | `sino`      |
+| `for`         | `para`      |
+| `print`       | `mostrar`   |
+| `true`        | `verdad`    |
+| `false`       | `falso`     |
+| `!`           | `no`        |
+| `&&`          | `y`         |
+| `\|\|`        | `o`         |
