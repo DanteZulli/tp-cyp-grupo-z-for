@@ -100,9 +100,14 @@ public class Interpreter extends LanguageBaseVisitor<Object> {
         Object left = visit(ctx.expr(0));
         Object right = visit(ctx.expr(1));
         boolean isFloat = left instanceof Double || right instanceof Double;
+        if (isFloat) {
+            return ctx.op.getText().equals("*")
+                    ? toDouble(left) * toDouble(right)
+                    : toDouble(left) / toDouble(right);
+        }
         return ctx.op.getText().equals("*")
-                ? (isFloat ? toDouble(left) * toDouble(right) : (int) left * (int) right)
-                : (isFloat ? toDouble(left) / toDouble(right) : (int) left / (int) right);
+                ? (int) left * (int) right
+                : (int) left / (int) right;
     }
 
     @Override
@@ -110,9 +115,14 @@ public class Interpreter extends LanguageBaseVisitor<Object> {
         Object left = visit(ctx.expr(0));
         Object right = visit(ctx.expr(1));
         boolean isFloat = left instanceof Double || right instanceof Double;
+        if (isFloat) {
+            return ctx.op.getText().equals("+")
+                    ? toDouble(left) + toDouble(right)
+                    : toDouble(left) - toDouble(right);
+        }
         return ctx.op.getText().equals("+")
-                ? (isFloat ? toDouble(left) + toDouble(right) : (int) left + (int) right)
-                : (isFloat ? toDouble(left) - toDouble(right) : (int) left - (int) right);
+                ? (int) left + (int) right
+                : (int) left - (int) right;
     }
 
     @Override
